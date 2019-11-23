@@ -66,7 +66,7 @@ class DjangoDatatablesServerProc(object):
 
             if isinstance(attr, int):
                 continue
-            if getattr(self, field).isdigit():
+            if attr is not None and attr.isdigit():
                 v = getattr(self, field)
                 setattr(self, field, int(v))
 
