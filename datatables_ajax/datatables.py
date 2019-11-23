@@ -30,38 +30,41 @@ class DjangoDatatablesServerProc(object):
         # says, it should be returned as the same value that was sent
         # (cast as an integer)
 
+        self.order_col = None
         if self.method == 'GET':
             self.d = {'draw': int(self.dt_ajax_request['draw'][0]),
                       'recordsTotal': 0,
                       'recordsFiltered': 0,
                       'data': []}
-            self.lenght = self.dt_ajax_request['length']
-            self.start  = self.dt_ajax_request['start']
             self.search_key = self.dt_ajax_request['search[value]']
-            self.order_col = self.dt_ajax_request['order[0][column]']
-            self.order_dir = self.dt_ajax_request['order[0][dir]']
+            if self.dt_ajax_request['orderable'] is True:
+                self.order_col = self.dt_ajax_request['order[0][column]']
+                self.order_dir = self.dt_ajax_request['order[0][dir]']
         else:
             # request.POST
             self.d = {'draw': int(self.dt_ajax_request['draw']),
                       'recordsTotal': 0,
                       'recordsFiltered': 0,
                       'data': []}
-            self.lenght = self.dt_ajax_request['length']
-            self.start  = self.dt_ajax_request['start']
             self.search_key = self.dt_ajax_request['search']['value']
-            self.order_col = self.dt_ajax_request['order'][0]['column']
-            self.order_dir = self.dt_ajax_request['order'][0]['dir']
+            print("ORDERALBE", self.dt_ajax_request['orderable'], type(self.dt_ajax_request['orderable']))
+            if self.dt_ajax_request['orderable'] is True and len(self.dt_ajax_request['order']):
+                self.order_col = self.dt_ajax_request['order'][0]['column']
+                self.order_dir = self.dt_ajax_request['order'][0]['dir']
+
+        self.lenght = self.dt_ajax_request['length']
+        self.start  = self.dt_ajax_request['start']
 
         # casting
-        for field in ['lenght', 'start', 'search_key',
-                      'order_col', 'order_dir']:
+        for field in ['lenght', 'start', 'search_key', 'order_col', 'order_dir']:
             attr = getattr(self, field)
             if isinstance(attr, list):
                 setattr(self, field, attr[0])
             else:
                 setattr(self, field, attr)
 
-            if isinstance(attr, int): continue
+            if isinstance(attr, int):
+                continue
             if getattr(self, field).isdigit():
                 v = getattr(self, field)
                 setattr(self, field, int(v))
