@@ -40,9 +40,8 @@ class DjangoDatatablesServerProc(object):
                       'recordsFiltered': 0,
                       'data': []}
             self.search_key = self.dt_ajax_request['search[value]']
-            if self.dt_ajax_request['orderable'] is True:
-                self.order_col = self.dt_ajax_request['order[0][column]']
-                self.order_dir = self.dt_ajax_request['order[0][dir]']
+            self.order_col = self.dt_ajax_request.get('order[0][column]', None)
+            self.order_dir = self.dt_ajax_request.get('order[0][dir]', None)
         else:
             # request.POST
             self.d = {'draw': int(self.dt_ajax_request['draw']),
@@ -50,8 +49,7 @@ class DjangoDatatablesServerProc(object):
                       'recordsFiltered': 0,
                       'data': []}
             self.search_key = self.dt_ajax_request['search']['value']
-            print("ORDERALBE", self.dt_ajax_request['orderable'], type(self.dt_ajax_request['orderable']))
-            if self.dt_ajax_request['orderable'] is True and len(self.dt_ajax_request['order']):
+            if len(self.dt_ajax_request['order']):
                 self.order_col = self.dt_ajax_request['order'][0]['column']
                 self.order_dir = self.dt_ajax_request['order'][0]['dir']
 
