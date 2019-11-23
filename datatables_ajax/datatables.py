@@ -17,6 +17,9 @@ class DjangoDatatablesServerProc(object):
         self.method = 'POST' if request.POST.get('args') else 'GET'
         if self.method == 'POST':
             r = json.loads(request.POST.get('args'))
+            import pprint
+            pprint.pprint(r)
+            print("R DEBUG ^")
         else:
             r = dict(request.GET)
 
